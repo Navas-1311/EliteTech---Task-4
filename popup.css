@@ -1,0 +1,87 @@
+/* popup.css */
+body {
+    font-family: 'Inter', sans-serif; /* Use Inter for consistency */
+    width: 350px; 
+    padding: 15px;
+    background-color: #f4f7fa;
+    color: #333;
+    box-sizing: border-box;
+}
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+h1 {
+    font-family: 'Montserrat', sans-serif; /* Use Montserrat for titles */
+    font-size: 1.6em;
+    margin: 0;
+    color: #3F51B5; /* Deep Indigo */
+    border-bottom: 2px solid #e0e0e0;
+    padding-bottom: 5px;
+}
+.status-box {
+    padding: 12px;
+    border-radius: 10px;
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+.status-box p {
+    margin: 5px 0;
+}
+
+.summary-section {
+    padding: 10px;
+    border-radius: 10px;
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+.summary-section h3 {
+    margin-top: 0;
+    font-size: 1.2em;
+    color: #444;
+}
+#summary-data p {
+    margin: 5px 0;
+    display: flex;
+    justify-content: space-between;
+    font-weight: 500;
+}
+
+#full-dashboard-btn {
+    padding: 10px;
+    background-color: #3F51B5; /* Deep Indigo */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.2s, transform 0.2s;
+}
+#full-dashboard-btn:hover {
+    background-color: #5C6BC0; /* Lighter Indigo */
+    transform: translateY(-1px);
+}
+
+/* Category colors */
+.productive {
+    color: #4CAF50; /* Green */
+    font-weight: bold;
+}
+.unproductive {
+    color: #F44336; /* Red */
+    font-weight: bold;
+}
+.neutral {
+    color: #FFC107; /* Yellow */
+    font-weight: bold;
+}
+.productive-p {
+    color: #4CAF50;
+}
+.unproductive-p {
+    color: #F44336;
+}
+.neutral-p {
+    color: #FFC107;
+}

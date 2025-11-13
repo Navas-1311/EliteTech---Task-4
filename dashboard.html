@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Detailed Productivity Analytics</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Chart.js: load local UMD build included in the extension (CSP requires local scripts) -->
+    <script src="chart.min.js"></script>
+    
+    <style>
+        /* Global Variables for consistent theming */
+        :root {
+            --primary-blue: #3F51B5; /* Deep Indigo */
+            --light-blue: #5C6BC0;  /* Lighter Indigo */
+            --accent-green: #4CAF50; /* Vibrant Green for productive */
+            --accent-red: #F44336;   /* Vibrant Red for unproductive */
+            --accent-yellow: #FFC107; /* Vibrant Yellow for neutral */
+            --background-color: #ECEFF1; 
+            --card-background: #FFFFFF;
+            --text-color-dark: #212121;
+            --text-color-light: #616161;
+            --border-color: #E0E0E0;
+            --shadow-light: 0 2px 8px rgba(0,0,0,0.08);
+            --shadow-medium: 0 5px 15px rgba(0,0,0,0.12);
+        }
+
+        /* Base Body and Text Styles */
+        body { 
+            font-family: 'Inter', sans-serif; 
+            padding: 30px; 
+            margin: 0;
+            background-color: var(--background-color);
+            color: var(--text-color-dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1, h2, h3 {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--primary-blue);
+            font-weight: 700;
+            margin-top: 0;
+        }
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            text-align: center;
+            color: var(--primary-blue);
+            padding-bottom: 10px;
+            border-bottom: 3px solid var(--light-blue);
+            animation: fadeInDown 0.8s ease-out;
+            max-width: 900px;
+            width: 100%;
+        }
+
+        /* Main Layout Grid */
+        .main-content {
+            display: grid;
+            grid-template-columns: 1.2fr 1.8fr; 
+            gap: 30px;
+            width: 100%;
+            max-width: 1200px; 
+            animation: fadeInUp 1s ease-out;
+            min-height: 80vh; /* CRITICAL: Guarantee height for grid */
+        }
+
+        /* Card Styling for all sections */
+        .card {
+            background: var(--card-background);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: var(--shadow-light);
+            transition: all 0.3s ease-in-out;
+            flex-grow: 1; /* CRITICAL: Ensure card fills available height */
+        }
+        .card:hover {
+            box-shadow: var(--shadow-medium);
+            transform: translateY(-3px);
+        }
+
+        /* Site List Styling */
+        #report-container {
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto; 
+            max-height: 70vh; 
+        }
+        #report-container h2 {
+            font-size: 1.8em;
+            margin-bottom: 15px;
+            color: var(--light-blue);
+        }
+        
+        .data-card {
+            background: #fcfcfc;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 15px; 
+            margin-bottom: 10px; 
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+            transition: all 0.2s ease-in-out;
+        }
+        .data-card:hover {
+            background-color: #f0f4f7;
+            border-color: var(--primary-blue);
+            transform: scale(1.01);
+        }
+        .data-card strong {
+            display: block;
+            font-size: 1.1em;
+            margin-bottom: 5px;
+            color: var(--text-color-dark);
+        }
+
+        /* Category Text Colors */
+        .productive { color: var(--accent-green); font-weight: 600; }
+        .unproductive { color: var(--accent-red); font-weight: 600; }
+        .neutral { color: var(--accent-yellow); font-weight: 600; }
+
+        /* Chart Specific Styling */
+        .chart-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start; /* Align content to the top */
+        }
+        .chart-container h2 {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            color: var(--light-blue);
+        }
+        
+        /* FIX: Wrapper to control chart size and ensure visibility */
+        #chart-wrapper {
+            width: 100%;
+            padding: 10px; 
+            height: 350px; /* Force a reliable height */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #productivityChart {
+            max-width: 100%; 
+            max-height: 100%;
+            animation: zoomIn 0.8s ease-out 0.2s forwards; 
+            opacity: 0; /* Start hidden for animation */
+        }
+        
+        /* Animations */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes zoomIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 900px) {
+            .main-content {
+                grid-template-columns: 1fr; 
+                padding: 15px;
+            }
+            body {
+                padding: 20px;
+            }
+            h1 {
+                font-size: 2em;
+            }
+            #report-container {
+                max-height: 50vh; 
+            }
+        }
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            h1 {
+                font-size: 1.8em;
+            }
+            .card {
+                padding: 15px;
+                border-radius: 10px;
+            }
+            .chart-container h2, #report-container h2 {
+                font-size: 1.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Detailed Productivity Report</h1>
+    <div class="main-content">
+        
+        <div id="report-container" class="card">
+            <h2>Site Usage Breakdown</h2>
+            <p>Loading detailed usage data...</p>
+        </div>
+
+        <div class="chart-container card">
+            <h2>Productivity Overview</h2>
+            <div id="chart-wrapper">
+                <canvas id="productivityChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script src="dashboard.js"></script> 
+</body>
+</html>

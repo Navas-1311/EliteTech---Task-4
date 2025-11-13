@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Productivity Dashboard</title>
+    <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Time Tracker</h1>
+        
+        <div id="current-status" class="status-box">
+            <p>Current Site: <span id="active-site">Loading...</span></p>
+            <p>Category: <span id="active-category">Loading...</span></p>
+        </div>
+
+        <div class="summary-section">
+            <h3>Today's Summary (Minutes)</h3>
+            <div id="summary-data">
+                <p class="productive-p">Productive: <span id="total-productive">0</span> min</p>
+                <p class="unproductive-p">Unproductive: <span id="total-unproductive">0</span> min</p>
+                <p class="neutral-p">Neutral/Other: <span id="total-neutral">0</span> min</p>
+            </div>
+        </div>
+
+        <button id="full-dashboard-btn">View Detailed Analytics</button>
+    </div>
+    
+    <script src="popup.js"></script>
+</body>
+</html>
